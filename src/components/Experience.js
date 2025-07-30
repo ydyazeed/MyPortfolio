@@ -18,6 +18,7 @@ const Experience = () => {
         "Led migration effort from legacy system to modern UI",
         "Fixed flaky BDDs and added Jasmine unit tests for frontend stability"
       ],
+      
       color: "bg-red-500"
     },
     {
