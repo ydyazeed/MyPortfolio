@@ -108,11 +108,32 @@ const About = () => {
                     </div>
                     <div>
                       <h3 className="text-2xl font-bold text-white tracking-tight">TechAtPlay</h3>
-                      <div className="text-orange-400 font-semibold">Computer Vision Engineer</div>
                       <div className="flex items-center gap-2 text-gray-400">
                         <Calendar size={16} />
                         <span className="text-lg">Sept 2022 - Aug 2023</span>
                       </div>
+                    </div>
+                  </div>
+                  
+                  {/* Career Progression */}
+                  <div className="bg-gray-800/30 rounded-lg p-4 backdrop-blur-sm border border-gray-700/50">
+                    <h5 className="text-gray-300 font-medium mb-4">Career Progression</h5>
+                    <div className="flex items-center gap-4">
+                      <div className="flex flex-col items-center">
+                        <div className="w-4 h-4 bg-orange-400 rounded-full shadow-lg"></div>
+                        <div className="w-0.5 h-12 bg-gradient-to-b from-orange-400 to-gray-400"></div>
+                        <div className="w-4 h-4 bg-gray-400 rounded-full"></div>
+                      </div>
+                                             <div className="space-y-8">
+                         <div>
+                           <div className="text-orange-400 font-semibold text-lg">Computer Vision Engineer</div>
+                           <div className="text-gray-400">Feb 2023 - August 2023</div>
+                         </div>
+                         <div>
+                           <div className="text-gray-300 font-medium">Data Science Intern</div>
+                           <div className="text-gray-500 text-sm">August 2022 - Feb 2023</div>
+                         </div>
+                       </div>
                     </div>
                   </div>
                 </div>

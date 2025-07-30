@@ -32,15 +32,27 @@ ChartJS.register(
 
 const Skills = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Check if mobile on mount and resize
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
           setIsVisible(true);
         }
       },
-      { threshold: 0.3 }
+      { 
+        threshold: isMobile ? 0.1 : 0.3,
+        rootMargin: '50px'
+      }
     );
 
     const skillsSection = document.querySelector('#skills');
@@ -48,8 +60,11 @@ const Skills = () => {
       observer.observe(skillsSection);
     }
 
-    return () => observer.disconnect();
-  }, []);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, [isMobile]);
 
 
 
@@ -72,11 +87,24 @@ const Skills = () => {
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
+    resizeDelay: 0,
     plugins: {
       legend: {
+        display: true,
+        position: 'bottom',
         labels: {
           color: '#e2e8f0',
-          font: { size: 12 }
+          font: { 
+            size: isMobile ? 10 : 12 
+          },
+          padding: isMobile ? 15 : 20,
+          usePointStyle: true,
+          boxWidth: isMobile ? 12 : 15,
+          boxHeight: isMobile ? 12 : 15,
+        },
+        padding: {
+          top: isMobile ? 15 : 20,
+          bottom: isMobile ? 5 : 10,
         }
       },
       tooltip: {
@@ -85,11 +113,25 @@ const Skills = () => {
         bodyColor: '#e2e8f0',
         borderColor: 'rgba(244, 63, 94, 0.5)',
         borderWidth: 1,
+        titleFont: { size: isMobile ? 12 : 14 },
+        bodyFont: { size: isMobile ? 11 : 13 },
       },
     },
+    layout: {
+      padding: {
+        top: isMobile ? 10 : 15,
+        bottom: isMobile ? 10 : 15,
+        left: isMobile ? 5 : 10,
+        right: isMobile ? 5 : 10,
+      }
+    },
     animation: {
-      duration: isVisible ? 2000 : 0,
+      duration: isVisible ? (isMobile ? 1000 : 2000) : 0,
       easing: 'easeInOutQuart',
+    },
+    interaction: {
+      intersect: false,
+      mode: 'index',
     },
   };
 
@@ -211,16 +253,31 @@ const Skills = () => {
       component: Bar,
       options: {
         ...chartOptions,
+        layout: {
+          padding: {
+            top: isMobile ? 15 : 20,
+            bottom: isMobile ? 15 : 20,
+            left: isMobile ? 10 : 15,
+            right: isMobile ? 10 : 15,
+          }
+        },
         scales: {
           y: {
             beginAtZero: true,
             max: 100,
             grid: { color: 'rgba(148, 163, 184, 0.1)' },
-            ticks: { color: '#64748b' },
+            ticks: { 
+              color: '#64748b',
+              font: { size: isMobile ? 10 : 12 }
+            },
           },
           x: {
             grid: { color: 'rgba(148, 163, 184, 0.1)' },
-            ticks: { color: '#64748b' },
+            ticks: { 
+              color: '#64748b',
+              font: { size: isMobile ? 9 : 11 },
+              maxRotation: isMobile ? 45 : 0,
+            },
           },
         },
       }
@@ -232,6 +289,14 @@ const Skills = () => {
       component: Radar,
       options: {
         ...chartOptions,
+        layout: {
+          padding: {
+            top: isMobile ? 20 : 25,
+            bottom: isMobile ? 25 : 30,
+            left: isMobile ? 15 : 20,
+            right: isMobile ? 15 : 20,
+          }
+        },
         scales: {
           r: {
             beginAtZero: true,
@@ -240,9 +305,13 @@ const Skills = () => {
             angleLines: { color: 'rgba(148, 163, 184, 0.2)' },
             pointLabels: {
               color: '#e2e8f0',
-              font: { size: 11 },
+              font: { size: isMobile ? 9 : 11 },
+              padding: isMobile ? 5 : 10,
             },
-            ticks: { display: false },
+            ticks: { 
+              display: false,
+              stepSize: 20,
+            },
           },
         },
       }
@@ -252,7 +321,17 @@ const Skills = () => {
       type: "pie",
       data: backendData,
       component: Pie,
-      options: chartOptions
+      options: {
+        ...chartOptions,
+        layout: {
+          padding: {
+            top: isMobile ? 15 : 20,
+            bottom: isMobile ? 20 : 25,
+            left: isMobile ? 10 : 15,
+            right: isMobile ? 10 : 15,
+          }
+        }
+      }
     },
     {
       title: "AI/ML & Computer Vision",
@@ -268,12 +347,27 @@ const Skills = () => {
       component: PolarArea,
       options: {
         ...chartOptions,
+        layout: {
+          padding: {
+            top: isMobile ? 20 : 25,
+            bottom: isMobile ? 25 : 30,
+            left: isMobile ? 15 : 20,
+            right: isMobile ? 15 : 20,
+          }
+        },
         scales: {
           r: {
             beginAtZero: true,
             max: 100,
             grid: { color: 'rgba(148, 163, 184, 0.2)' },
-            ticks: { display: false },
+            pointLabels: {
+              color: '#e2e8f0',
+              font: { size: isMobile ? 8 : 10 },
+            },
+            ticks: { 
+              display: false,
+              stepSize: 25,
+            },
           },
         },
       }
@@ -286,6 +380,14 @@ const Skills = () => {
       options: {
         ...chartOptions,
         cutout: '60%',
+        layout: {
+          padding: {
+            top: isMobile ? 15 : 20,
+            bottom: isMobile ? 20 : 25,
+            left: isMobile ? 10 : 15,
+            right: isMobile ? 10 : 15,
+          }
+        }
       }
     }
   ];
@@ -330,15 +432,15 @@ const Skills = () => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="glass-effect p-6 rounded-xl"
+              className="glass-effect p-4 sm:p-6 rounded-xl overflow-hidden"
             >
-              <h3 className="text-xl font-semibold mb-6 gradient-text text-center tracking-tight leading-tight">
+              <h3 className="text-xl font-semibold mb-4 sm:mb-6 gradient-text text-center tracking-tight leading-tight">
                 {chart.title}
               </h3>
               
-              <div className="h-80 flex items-center justify-center">
+              <div className="h-72 sm:h-80 md:h-96 w-full relative mt-2 sm:mt-4">
                 {chart.type === 'wordcloud' ? (
-                  <div className="w-full h-full flex flex-wrap items-center justify-center gap-2 p-4 overflow-hidden">
+                  <div className="w-full h-full flex flex-wrap items-center justify-center gap-1 sm:gap-2 p-4 sm:p-6 overflow-hidden">
                     {chart.data.map((word, wordIndex) => (
                       <motion.span
                         key={wordIndex}
@@ -353,16 +455,20 @@ const Skills = () => {
                         className={`${word.size} ${word.color} ${word.weight} cursor-pointer hover:scale-110 transition-transform duration-200 text-center leading-tight`}
                         style={{
                           transform: `rotate(${Math.random() * 10 - 5}deg)`,
-                          margin: '2px'
+                          margin: '1px'
                         }}
                       >
                         {word.text}
                       </motion.span>
                     ))}
                   </div>
-                ) : (
-                  <chart.component data={chart.data} options={chart.options} />
-                )}
+                                  ) : (
+                    <div className="w-full h-full relative overflow-hidden flex flex-col">
+                      <div className="flex-1 min-h-0">
+                        <chart.component data={chart.data} options={chart.options} />
+                      </div>
+                    </div>
+                  )}
               </div>
             </motion.div>
           ))}
